@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Boosrap & jQuery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(() => {
+            $('.add-todo').keydown((e) => {
+                if(e.key === 'Enter'){
+                    if(e.target.value === ''){
+                        alert('請填入待辦事項');
+                    }else{
+                        const newTodo = getTodoHTML(e.target.value);
+                        $('.list-group').append(newTodo);
+                        $('.add-todo').val("");
+                    }
+                }
+            });
+
+            function getTodoHTML(value){
+                return `
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>${value}</span>
+                    <div>
+                        <button type="button" class="btn btn-success todo__finish">完成</button>
+                        <button type="button" class="btn btn-warning todo__edit">編輯</button>
+                        <button type="button" class="btn btn-danger todo__delete">刪除</button>
+                    </div>
+                </li>
+                `
+            }
+
+            $('.list-group').click((e) => {
+                const element = $(e.target);
+                if(element.hasClass('todo__delete')){
+                    element.parent().parent().remove();
+                }else if(element.hasClass('todo__finish')){
+                    if(element.hasClass('todo__undo')){
+                        element.parent().parent().removeClass('list-group-item-success');
+                        element.text('完成');
+                        element.removeClass('todo__undo btn-secondary');
+                        element.addClass('btn-success');
+                    }else{
+                        element.parent().parent().addClass('list-group-item-success');
+                        element.addClass('todo__undo btn-secondary');
+                        element.text('未完成');
+                        element.removeClass('btn-success');
+                    }
+                }else if(element.hasClass('todo__edit')){
+                    let edit = prompt("請輸入代辦事項");
+                    if(!edit){
+                        edit = element.parent().parent().find('span').text();
+                    }
+                    element.parent().parent().find('span').text(edit);
+                }
+            })
+
+
+            $('.todo__delete-alldo').click(() => {
+                $('.todo__undo').parent().parent().remove();
+            })
+
+            $('.todo__finish-list').click(() => {
+                $('.todo__finish').parent().parent().removeClass('d-flex');
+                $('.todo__finish').parent().parent().addClass('d-none');
+                $('.todo__undo').parent().parent().removeClass('d-none');
+                $('.todo__undo').parent().parent().addClass('d-flex');
+            })
+
+            $('.todo__undo-list').click(() => {
+                $('.todo__finish').parent().parent().addClass('d-flex');
+                $('.todo__finish').parent().parent().removeClass('d-none');
+                $('.todo__undo').parent().parent().addClass('d-none');
+                $('.todo__undo').parent().parent().removeClass('d-flex');
+            })
+
+            $('.todo__list').click(() => {
+                $('.todo__finish').parent().parent().removeClass('d-none');
+                $('.todo__finish').parent().parent().addClass('d-flex');
+            })
+
+        });
+    </script>
+    <style>
+        .container{
+            margin-top: 20px;
+        }
+        .todo__func{
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="btn-group todo__func" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary todo__finish-list">已完成</button>
+                    <button type="button" class="btn btn-primary todo__undo-list">未完成</button>
+                    <button type="button" class="btn btn-primary todo__delete-alldo">清除已完成</button>
+                    <button type="button" class="btn btn-primary todo__list">所有事項</button>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Add new todo</span>
+                    </div>
+                    <input type="text" class="form-control add-todo" placeholder="todo" aria-label="todo" >
+                </div>
+                          
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>洗衣服</span>
+                        <div>
+                            <button type="button" class="btn btn-success todo__finish">完成</button>
+                            <button type="button" class="btn btn-warning todo__edit">編輯</button>
+                            <button type="button" class="btn btn-danger todo__delete">刪除</button>
+                        </div>  
+                    </li>
+                </ul>
+            </div>
+    </div>
+</body>
+</html>
