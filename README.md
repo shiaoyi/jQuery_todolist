@@ -1,5 +1,5 @@
 # jquery_todolist
-使用jQuery和Bootstrap打造的待辦事項
+使用 jQuery 和 Bootstrap 打造的待辦事項
 
 ## 有以下功能
 * 新增 todo
